@@ -1,0 +1,43 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 20px;
+}
+
+.title {
+    text-align: center;
+    margin: 20px 0;
+    color: #333;
+}
+
+.Device-List {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.Add-Device {
+    background-color: #050505;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.Remove-Device {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: none;
+    cursor: pointer;
+}
