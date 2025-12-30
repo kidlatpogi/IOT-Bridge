@@ -1,8 +1,34 @@
-# IOT-Bridge is a Web Application that will be hosted using my Home Server and Vercel(DEMO).
-1. IOT-Bridge will be used so that I can access my smart home devices or appliances without opening my phone and watch.
-2. I will also be using the API or HTTP request that I made using Python
+<div align="center">
 
-# Why I made it?
-I found reaching, opening my phone and TAPO application a hassle when I'm using my PC so I'll just build a Web App so that I can open it using my PC
+# 🌉 IOT-Bridge
 
-# I'll update the Readme SOON. Tinatamad ako.
+**Control your Smart Home directly from your PC.**
+<br>
+A web-based dashboard bridging the gap between your desktop workflow and Tapo IoT devices.
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+</div>
+
+---
+
+## ⚡ The Problem
+Switching contexts to pick up a phone, open an app, and wait for it to load just to turn on a light or fan is a friction point. When I am at my PC, I want to control my environment *from* my PC.
+
+## 💡 The Solution
+**IOT-Bridge** is a custom Web Application hosted on my Home Server. It bypasses the need for the mobile app by using custom Python scripts to interface directly with device APIs.
+
+## 🛠️ Tech Stack
+This project utilizes a hybrid architecture to ensure low latency and accessibility:
+
+* **Frontend:** React (JavaScript) – *User Interface*
+* **Backend:** Python – *API Wrapper & HTTP Requests*
+* **Hosting:**
+    * **Primary:** Home Server (Self-Hosted for local control)
+    * **Demo:** Vercel (Public preview)
+
+---
+
+> 🚧 **Status:** This project is currently under active development. Full documentation and setup instructions are coming soon.
