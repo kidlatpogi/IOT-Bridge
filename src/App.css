@@ -10,16 +10,15 @@ body{
     margin: 20px;
 }
 
-.title {
+.Title {
     text-align: center;
     margin: 20px 0;
     color: #333;
 }
 
 .Device-List {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 20px;
+    margin: auto;
+    max-width: 500px;
 }
 
 .Add-Device {
@@ -27,13 +26,27 @@ body{
     color: white;
     padding: 10px 20px;
     border-radius: 20px;
-    margin-bottom: 20px;
+    margin: 20px auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
     border: none;
     cursor: pointer;
 }
 
 .Remove-Device {
     background-color: #ff4d4d;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.Edit-Device {
+    background-color: #4da6ff;
     color: white;
     padding: 5px 10px;
     border-radius: 20px;
