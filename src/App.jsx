@@ -19,9 +19,10 @@ function App() {
   // Add Device
   const addDevice = () => {
     const deviceName = prompt("Enter device name:");
+    const ipaddress = prompt("Enter device IP address:");
     
     if (deviceName) {
-      setDevices(prev => [...prev, { name: deviceName }]);
+      setDevices(prev => [...prev, { name: deviceName, ip: ipaddress }]);
       console.log("Device added:", deviceName);
     }
   }
@@ -37,18 +38,35 @@ function App() {
     }
   }
 
+  // Edit Device
+  const editDevice = (index) => {
+    const newDeviceName = prompt("Enter new device name:");
+    
+    if (newDeviceName) {
+      setDevices(prev => prev.map((d, i) => i === index ? { name: newDeviceName } : d));
+      console.log("Device modified at index:", index);
+    }
+  }
+
 
   // UI
   return (
     <>
-      <header><h1 className='Title'>I.O.T Bridge</h1></header>
+      <header className='Title'><h1>I.O.T Bridge</h1></header>
 
       <main>
         <button className='Add-Device' onClick={addDevice}>Add Device</button>
-        
-        <ul className='Device-List'>
-          {devices.map((d, i) => <li key={i}>{d.name} <button className='Remove-Device' onClick={() => removeDevice(i)}>Remove</button></li>)}
-        </ul>
+
+        <div className='Device-List'>
+          {devices.map((d, i) => (
+            <div key={i}>
+              <h2>{d.name}</h2>
+              <p>{d.ip}</p>
+              <button className='Edit-Device' onClick={() => editDevice(i)}>Edit</button>
+              <button className='Remove-Device' onClick={() => removeDevice(i)}>Remove</button>
+            </div>
+          ))}
+        </div>
         
       </main>
     </>
