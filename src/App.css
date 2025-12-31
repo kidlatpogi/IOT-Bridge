@@ -19,6 +19,9 @@ body{
 .Device-List {
     margin: auto;
     max-width: 500px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 .Add-Device {
@@ -53,4 +56,22 @@ body{
     margin-bottom: 20px;
     border: none;
     cursor: pointer;
+}
+
+.Device-Control-Panel {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.Device-Control {
+    padding: 5px 10px;
+    border-radius: 100%;
+    margin: 0 5px;
+    margin-bottom: 20px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
