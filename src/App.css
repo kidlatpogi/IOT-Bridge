@@ -5,70 +5,126 @@
 }
 
 body{
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #ffffff;
     margin: 20px;
 }
 
 .Title {
     text-align: center;
     margin: 20px 0;
-    color: #333;
+    color: #000000;
+    font-size: 2.5rem;
 }
 
 .Device-List {
     margin: auto;
-    max-width: 500px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Device-Item {
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.Device-Info {
+    display: flex;
+    flex-direction: column;
+}
+
+.Device-Info h2 {
+    margin: 0 0 10px 0;
+    color: #000000;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.Device-Info p {
+    margin: 0 0 15px 0;
+    color: #555555;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.Device-Buttons {
+    display: flex;
+    gap: 10px;
 }
 
 .Add-Device {
-    background-color: #050505;
+    background-color: #000000;
     color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 20px 30px;
+    border-radius: 25px;
     margin: 20px auto;
     align-items: center;
     justify-content: center;
     display: flex;
     border: none;
     cursor: pointer;
+    font-size: 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-.Remove-Device {
-    background-color: #ff4d4d;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-    margin-left: 5px;
-    border: none;
-    cursor: pointer;
+.Add-Device:hover {
+    background-color: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .Edit-Device {
-    background-color: #4da6ff;
-    color: white;
-    padding: 5px 10px;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 8px 15px;
     border-radius: 20px;
-    margin-bottom: 20px;
-    border: none;
+    border: 2px solid #000000;
     cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-.Device-Control-Panel {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
+.Edit-Device:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.Remove-Device {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 2px solid #000000;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.Remove-Device:hover {
+    background-color: #000000;
+    color: #ffffff;
 }
 
 .Device-Control {
+    background-color: #F9F9F9;
     padding: 5px 10px;
     border-radius: 100%;
     margin: 0 5px;
-    margin-bottom: 20px;
     border: none;
     cursor: pointer;
     display: flex;
