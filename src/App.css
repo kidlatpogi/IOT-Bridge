@@ -116,7 +116,7 @@ body{
 }
 
 .Remove-Device:hover {
-    background-color: #000000;
+    background-color: red;
     color: #ffffff;
 }
 
