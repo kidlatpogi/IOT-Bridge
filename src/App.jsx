@@ -26,9 +26,15 @@ function App() {
 
   // Add Device
   const addDevice = () => {
+    const choice = prompt("What is the device type?\n1. Bulb\n2. Switch\n3. Sensor\nEnter 1, 2, or 3:");
     const deviceName = prompt("Enter device name:");
     const ipaddress = prompt("Enter device IP address:");
     
+    if (!deviceName || !ipaddress || !choice) {
+      alert("All fields are required.");
+      return;
+    }
+
     if (deviceName && ipaddress) {
       if (!isValidIP(ipaddress)) {
         alert("Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.1)");
@@ -36,6 +42,8 @@ function App() {
       }
       setDevices(prev => [...prev, { name: deviceName, ip: ipaddress }]);
       console.log("Device added:", deviceName);
+    } else {
+      alert("Device name and IP address are required.");
     }
   }
 
