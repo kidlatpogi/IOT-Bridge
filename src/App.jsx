@@ -26,8 +26,6 @@ function App() {
     ip: ""
   });
 
-  const [editChoice, setEditChoice] = useState("1");
-
   // Add Device UseEffect
   useEffect(() => {
     localStorage.setItem("devices", JSON.stringify(devices));
@@ -71,7 +69,6 @@ function App() {
   // Edit Device Modal Handlers
   const openEditModal = (index) => {
     setEditingIndex(index);
-    setEditChoice("1");
     setFormData({ deviceType: "1", name: devices[index].name, ip: devices[index].ip });
     setShowEditModal(true);
   };
@@ -79,33 +76,38 @@ function App() {
   const closeEditModal = () => {
     setShowEditModal(false);
     setEditingIndex(null);
-    setEditChoice("1");
     setFormData({ deviceType: "1", name: "", ip: "" });
   };
 
   const handleEditDevice = (e) => {
     e.preventDefault();
     
-    if (editChoice === "1") {
-      if (!formData.name.trim()) {
-        alert("Device name cannot be empty.");
-        return;
-      }
-      setDevices(prev => prev.map((d, i) => i === editingIndex ? { ...d, name: formData.name } : d));
-      console.log("Device name modified at index:", editingIndex);
-    } else if (editChoice === "2") {
-      if (!formData.ip.trim()) {
-        alert("IP address cannot be empty.");
-        return;
-      }
+    let hasChanges = false;
+    let updatedDevice = { ...devices[editingIndex] };
+
+    // Check if name was changed
+    if (formData.name.trim() && formData.name !== devices[editingIndex].name) {
+      updatedDevice.name = formData.name;
+      hasChanges = true;
+    }
+
+    // Check if IP was changed
+    if (formData.ip.trim() && formData.ip !== devices[editingIndex].ip) {
       if (!isValidIP(formData.ip)) {
         alert("Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.1)");
         return;
       }
-      setDevices(prev => prev.map((d, i) => i === editingIndex ? { ...d, ip: formData.ip } : d));
-      console.log("Device IP modified at index:", editingIndex);
+      updatedDevice.ip = formData.ip;
+      hasChanges = true;
     }
-    closeEditModal();
+
+    if (hasChanges) {
+      setDevices(prev => prev.map((d, i) => i === editingIndex ? updatedDevice : d));
+      console.log("Device modified at index:", editingIndex);
+      closeEditModal();
+    } else {
+      alert("Please make changes before updating.");
+    }
   };
 
   // Remove Device Modal Handlers
@@ -228,39 +230,23 @@ function App() {
                   </div>
                 )}
                 <div className='Form-Group'>
-                  <label>What would you like to edit?</label>
-                  <select 
-                    value={editChoice}
-                    onChange={(e) => setEditChoice(e.target.value)}
-                  >
-                    <option value="1">Edit Device Name</option>
-                    <option value="2">Edit I.P. Address</option>
-                  </select>
+                  <label>Edit Device Name</label>
+                  <input 
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Enter new device name"
+                  />
                 </div>
-                {editChoice === "1" && (
-                  <div className='Form-Group'>
-                    <label>New Device Name</label>
-                    <input 
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="Enter new device name"
-                      required
-                    />
-                  </div>
-                )}
-                {editChoice === "2" && (
-                  <div className='Form-Group'>
-                    <label>New I.P. Address</label>
-                    <input 
-                      type="text"
-                      value={formData.ip}
-                      onChange={(e) => setFormData({...formData, ip: e.target.value})}
-                      placeholder="e.g., 192.168.1.1"
-                      required
-                    />
-                  </div>
-                )}
+                <div className='Form-Group'>
+                  <label>Edit I.P. Address</label>
+                  <input 
+                    type="text"
+                    value={formData.ip}
+                    onChange={(e) => setFormData({...formData, ip: e.target.value})}
+                    placeholder="e.g., 192.168.1.1"
+                  />
+                </div>
                 <div className='Modal-Actions'>
                   <button type="button" className='Modal-Cancel' onClick={closeEditModal}>Cancel</button>
                   <button type="submit" className='Modal-Submit'>Update</button>
