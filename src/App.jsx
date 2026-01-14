@@ -221,14 +221,20 @@ function App() {
                 <button className='Modal-Close' onClick={closeEditModal}>×</button>
               </div>
               <form onSubmit={handleEditDevice}>
+                {editingIndex !== null && (
+                  <div className='Edit-Device-Info'>
+                    <p><strong>Device:</strong> {devices[editingIndex]?.name}</p>
+                    <p><strong>IP:</strong> {devices[editingIndex]?.ip}</p>
+                  </div>
+                )}
                 <div className='Form-Group'>
                   <label>What would you like to edit?</label>
                   <select 
                     value={editChoice}
                     onChange={(e) => setEditChoice(e.target.value)}
                   >
-                    <option value="1">Device Name</option>
-                    <option value="2">IP Address</option>
+                    <option value="1">Edit Device Name</option>
+                    <option value="2">Edit I.P. Address</option>
                   </select>
                 </div>
                 {editChoice === "1" && (
@@ -245,7 +251,7 @@ function App() {
                 )}
                 {editChoice === "2" && (
                   <div className='Form-Group'>
-                    <label>New IP Address</label>
+                    <label>New I.P. Address</label>
                     <input 
                       type="text"
                       value={formData.ip}
