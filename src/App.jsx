@@ -12,6 +12,20 @@ function App() {
   // Device Control State (on/off)
   const [deviceControls, setDeviceControls] = useState({});
 
+  // Modal States
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [removingIndex, setRemovingIndex] = useState(null);
+
+  // Form States
+  const [formData, setFormData] = useState({
+    deviceType: "1",
+    name: "",
+    ip: ""
+  });
+
   // Add Device UseEffect
   useEffect(() => {
     localStorage.setItem("devices", JSON.stringify(devices));
@@ -24,69 +38,101 @@ function App() {
     return ipRegex.test(ip);
   }
 
-  // Add Device
-  const addDevice = () => {
-    const choice = prompt("What is the device type?\n1. Bulb\n2. Switch\n3. Sensor\nEnter 1, 2, or 3:");
-    const deviceName = prompt("Enter device name:");
-    const ipaddress = prompt("Enter device IP address:");
-    
-    if (!deviceName || !ipaddress || !choice) {
+  // Add Device Modal Handlers
+  const openAddModal = () => {
+    setFormData({ deviceType: "1", name: "", ip: "" });
+    setShowAddModal(true);
+  };
+
+  const closeAddModal = () => {
+    setShowAddModal(false);
+    setFormData({ deviceType: "1", name: "", ip: "" });
+  };
+
+  const handleAddDevice = (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.ip) {
       alert("All fields are required.");
       return;
     }
 
-    if (deviceName && ipaddress) {
-      if (!isValidIP(ipaddress)) {
+    if (!isValidIP(formData.ip)) {
+      alert("Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.1)");
+      return;
+    }
+
+    setDevices(prev => [...prev, { name: formData.name, ip: formData.ip }]);
+    console.log("Device added:", formData.name);
+    closeAddModal();
+  };
+
+  // Edit Device Modal Handlers
+  const openEditModal = (index) => {
+    setEditingIndex(index);
+    setFormData({ deviceType: "1", name: devices[index].name, ip: devices[index].ip });
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditingIndex(null);
+    setFormData({ deviceType: "1", name: "", ip: "" });
+  };
+
+  const handleEditDevice = (e) => {
+    e.preventDefault();
+    
+    let hasChanges = false;
+    let updatedDevice = { ...devices[editingIndex] };
+
+    // Check if name was changed
+    if (formData.name.trim() && formData.name !== devices[editingIndex].name) {
+      updatedDevice.name = formData.name;
+      hasChanges = true;
+    }
+
+    // Check if IP was changed
+    if (formData.ip.trim() && formData.ip !== devices[editingIndex].ip) {
+      if (!isValidIP(formData.ip)) {
         alert("Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.1)");
         return;
       }
-      setDevices(prev => [...prev, { name: deviceName, ip: ipaddress }]);
-      console.log("Device added:", deviceName);
+      updatedDevice.ip = formData.ip;
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      setDevices(prev => prev.map((d, i) => i === editingIndex ? updatedDevice : d));
+      console.log("Device modified at index:", editingIndex);
+      closeEditModal();
     } else {
-      alert("Device name and IP address are required.");
+      alert("Please make changes before updating.");
     }
-  }
+  };
 
-  // Remove Device
-  const removeDevice = (index) => {
-    const deviceName = devices[index].name;
-    const confirmed = window.confirm(`Are you sure you want to remove "${deviceName}"?`);
-    
-    if (confirmed) {
-      setDevices(prev => prev.filter((_, i) => i !== index));
-      console.log("Device removed at index:", index);
-    }
-  }
+  // Remove Device Modal Handlers
+  const openRemoveModal = (index) => {
+    setRemovingIndex(index);
+    setShowRemoveModal(true);
+  };
 
-  // Edit Device (Name or IP)
-  const editDeviceInfo = (index) => {
-    const choice = prompt("What would you like to edit?\n1. Name\n2. IP Address\n\nEnter 1 or 2:");
-    
-    if (choice === "1") {
-      const newDeviceName = prompt("Enter new device name:");
-      if (newDeviceName) {
-        setDevices(prev => prev.map((d, i) => i === index ? { ...d, name: newDeviceName } : d));
-        console.log("Device name modified at index:", index);
-      }
-    } else if (choice === "2") {
-      const newDeviceIp = prompt("Enter new device IP address:");
-      if (newDeviceIp) {
-        if (!isValidIP(newDeviceIp)) {
-          alert("Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.1)");
-          return;
-        }
-        setDevices(prev => prev.map((d, i) => i === index ? { ...d, ip: newDeviceIp } : d));
-        console.log("Device IP modified at index:", index);
-      }
-    }
-  }
+  const closeRemoveModal = () => {
+    setShowRemoveModal(false);
+    setRemovingIndex(null);
+  };
+
+  const handleRemoveDevice = () => {
+    setDevices(prev => prev.filter((_, i) => i !== removingIndex));
+    console.log("Device removed at index:", removingIndex);
+    closeRemoveModal();
+  };
 
   const buttonControl = (index) => {
     setDeviceControls(prev => ({
       ...prev,
       [index]: !prev[index]
     }));
-  }
+  };;
 
   // UI
   return (
@@ -94,7 +140,7 @@ function App() {
       <header className='Title'><h1>IOT Bridge</h1></header>
 
       <main>
-        <button className='Add-Device' onClick={addDevice}>Add Device</button>
+        <button className='Add-Device' onClick={openAddModal}>Add Device</button>
 
         <div className='Device-List'>
           {devices.map((d, i) => (
@@ -103,8 +149,8 @@ function App() {
                 <h2>{d.name}</h2>
                 <p>{d.ip}</p>
                 <div className='Device-Buttons'>
-                  <button className='Edit-Device' onClick={() => editDeviceInfo(i)}>Edit</button>
-                  <button className='Remove-Device' onClick={() => removeDevice(i)}>Remove</button>
+                  <button className='Edit-Device' onClick={() => openEditModal(i)}>Edit</button>
+                  <button className='Remove-Device' onClick={() => openRemoveModal(i)}>Remove</button>
                 </div>
               </div>
               <button className='Device-Control' onClick={() => buttonControl(i)}>
@@ -118,6 +164,117 @@ function App() {
             </div>
           ))}
         </div>
+
+        {/* Add Device Modal */}
+        {showAddModal && (
+          <div className='Modal-Overlay' onClick={closeAddModal}>
+            <div className='Modal' onClick={(e) => e.stopPropagation()}>
+              <div className='Modal-Header'>
+                <h2>Add Device</h2>
+                <button className='Modal-Close' onClick={closeAddModal}>×</button>
+              </div>
+              <form onSubmit={handleAddDevice}>
+                <div className='Form-Group'>
+                  <label>Device Type</label>
+                  <select 
+                    value={formData.deviceType}
+                    onChange={(e) => setFormData({...formData, deviceType: e.target.value})}
+                  >
+                    <option value="1">Bulb</option>
+                    <option value="2">Switch</option>
+                    <option value="3">Sensor</option>
+                  </select>
+                </div>
+                <div className='Form-Group'>
+                  <label>Device Name</label>
+                  <input 
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Enter device name"
+                    required
+                  />
+                </div>
+                <div className='Form-Group'>
+                  <label>IP Address</label>
+                  <input 
+                    type="text"
+                    value={formData.ip}
+                    onChange={(e) => setFormData({...formData, ip: e.target.value})}
+                    placeholder="e.g., 192.168.1.1"
+                    required
+                  />
+                </div>
+                <div className='Modal-Actions'>
+                  <button type="button" className='Modal-Cancel' onClick={closeAddModal}>Cancel</button>
+                  <button type="submit" className='Modal-Submit'>Add Device</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Device Modal */}
+        {showEditModal && (
+          <div className='Modal-Overlay' onClick={closeEditModal}>
+            <div className='Modal' onClick={(e) => e.stopPropagation()}>
+              <div className='Modal-Header'>
+                <h2>Edit Device</h2>
+                <button className='Modal-Close' onClick={closeEditModal}>×</button>
+              </div>
+              <form onSubmit={handleEditDevice}>
+                {editingIndex !== null && (
+                  <div className='Edit-Device-Info'>
+                    <p><strong>Device:</strong> {devices[editingIndex]?.name}</p>
+                    <p><strong>IP:</strong> {devices[editingIndex]?.ip}</p>
+                  </div>
+                )}
+                <div className='Form-Group'>
+                  <label>Edit Device Name</label>
+                  <input 
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Enter new device name"
+                  />
+                </div>
+                <div className='Form-Group'>
+                  <label>Edit I.P. Address</label>
+                  <input 
+                    type="text"
+                    value={formData.ip}
+                    onChange={(e) => setFormData({...formData, ip: e.target.value})}
+                    placeholder="e.g., 192.168.1.1"
+                  />
+                </div>
+                <div className='Modal-Actions'>
+                  <button type="button" className='Modal-Cancel' onClick={closeEditModal}>Cancel</button>
+                  <button type="submit" className='Modal-Submit'>Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Remove Device Modal */}
+        {showRemoveModal && (
+          <div className='Modal-Overlay' onClick={closeRemoveModal}>
+            <div className='Modal Modal-Danger' onClick={(e) => e.stopPropagation()}>
+              <div className='Modal-Header'>
+                <h2>Remove Device</h2>
+                <button className='Modal-Close' onClick={closeRemoveModal}>×</button>
+              </div>
+              <div className='Modal-Body'>
+                <p>Are you sure you want to remove "{removingIndex !== null && devices[removingIndex]?.name}"?</p>
+                <p className='Warning-Text'>This action cannot be undone.</p>
+              </div>
+              <div className='Modal-Actions'>
+                <button type="button" className='Modal-Cancel' onClick={closeRemoveModal}>Cancel</button>
+                <button type="button" className='Modal-Delete' onClick={handleRemoveDevice}>Remove</button>
+              </div>
+            </div>
+          </div>
+        )}
         
       </main>
     </>
